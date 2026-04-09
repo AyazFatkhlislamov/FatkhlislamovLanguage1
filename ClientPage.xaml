@@ -10,30 +10,22 @@
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="30"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="40"/>
         </Grid.RowDefinitions>
 
-        <ListView Name="ClientListView" Grid.Row="1" HorizontalContentAlignment="Stretch">
+        <ListView Name="ClientListView" Grid.Row="0" HorizontalContentAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <Border BorderBrush="Black" BorderThickness="1" Margin="0,0,0,5">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="auto"/>
-                                <RowDefinition Height="auto"/>
-                                <RowDefinition Height="auto"/>
-                                <RowDefinition Height="auto"/>
-                                <RowDefinition Height="auto"/>
-                                <RowDefinition Height="auto"/>
-                                <RowDefinition Height="auto"/>
-                            </Grid.RowDefinitions>
+                    <Border BorderBrush="LightGray" BorderThickness="1" Margin="0,0,0,2">
+                        <Grid Margin="5">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="150"/>
+                                <ColumnDefinition Width="130"/>
                                 <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="170"/>
                             </Grid.ColumnDefinitions>
 
-                            <Image Width="130" Stretch="Uniform" Grid.Column="0" Grid.RowSpan="7" VerticalAlignment="Center">
+                            <Image Width="110" Height="110" Stretch="UniformToFill" Grid.Column="0" VerticalAlignment="Top" Margin="0,0,10,0">
                                 <Image.Source>
                                     <Binding Path="ClientPhotoPath">
                                         <Binding.TargetNullValue>
@@ -42,27 +34,67 @@
                                     </Binding>
                                 </Image.Source>
                             </Image>
-                            
-                            <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="0">
-                                <TextBlock Text="{Binding ID, StringFormat=ID: {0}}" FontSize="17" FontWeight="Bold"/>
-                                <TextBlock Text=" "/>
-                                <TextBlock Text="{Binding FullName}" FontSize="17" FontWeight="Bold"/>
+
+                            <StackPanel Grid.Column="1" VerticalAlignment="Top">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding ID, StringFormat=ID: {0}}" FontSize="16"/>
+                                    <TextBlock Text="  "/>
+                                    <TextBlock Text="{Binding FullName}" FontSize="16"/>
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                                    <TextBlock Text="{Binding Gender.Name, StringFormat=Пол: {0}}" FontSize="15"/>
+                                    <TextBlock Text="  "/>
+                                    <TextBlock Text="{Binding Birthday, StringFormat=Дата рождения: {0:d}}" FontSize="15"/>
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                                    <TextBlock Text="{Binding Phone, StringFormat=Телефон: {0}}" FontSize="15"/>
+                                    <TextBlock Text="  "/>
+                                    <TextBlock Text="{Binding Email, StringFormat=e-mail: {0}}" FontSize="15"/>
+                                </StackPanel>
+
+                                <TextBlock Text="{Binding RegistrationDate, StringFormat=Дата регистрации: {0:d}}" FontSize="15" Margin="0,20,0,0"/>
+
+                                <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                                    <TextBlock Text="{Binding LastVisitDate, StringFormat=Дата последнего посещения: {0:d}, TargetNullValue='Дата последнего посещения: нет'}" FontSize="15"/>
+                                    <TextBlock Text="{Binding VisitCount, StringFormat=' Кол-во посещений: {0}'}" FontSize="15"/>
+                                </StackPanel>
                             </StackPanel>
 
-                            <TextBlock Text="{Binding Gender.Name, StringFormat=Пол: {0}}" Grid.Column="1" Grid.Row="1" FontSize="15"/>
-
-                            <TextBlock Text="{Binding Birthday, StringFormat=Дата рождения: {0:dd.MM.yyyy}}" Grid.Column="1" Grid.Row="2" FontSize="15"/>
-
-                            <TextBlock Text="{Binding Phone, StringFormat=Телефон: {0}}" Grid.Column="1" Grid.Row="3" FontSize="15"/>
-
-                            <TextBlock Text="{Binding Email, StringFormat=Электронная почта: {0}}" Grid.Column="1" Grid.Row="4" FontSize="15"/>
-
-                            <TextBlock Text="{Binding RegistrationDate, StringFormat=Дата добавления: {0:dd.MM.yyyy}}" Grid.Column="1" Grid.Row="5" FontSize="15"/>
-
+                            <!-- Кнопка удаления в строке -->
+                            <Button Grid.Column="2" Content="удалить" Background="#00BFFF" Foreground="Black" BorderBrush="Black" Width="150" Height="30" VerticalAlignment="Center" Click="BtnDelete_Click"/>
                         </Grid>
                     </Border>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
+
+        <!-- Нижняя панель точь-в-точь по методичке -->
+        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,20,0">
+
+            <TextBlock Name="TextBlockCount" VerticalAlignment="Center" FontSize="15" Margin="0,0,20,0"/>
+
+            <TextBlock Text="Выводить по " VerticalAlignment="Center" FontSize="15"/>
+            <ComboBox Name="ComboType" SelectionChanged="ComboType_SelectionChanged" SelectedIndex="0" Width="70" Height="25" VerticalAlignment="Center" Margin="0,0,10,0" FontSize="15">
+                <TextBlock>10</TextBlock>
+                <TextBlock>50</TextBlock>
+                <TextBlock>200</TextBlock>
+                <TextBlock>Все</TextBlock>
+            </ComboBox>
+
+            <!-- Кнопка ВЛЕВО -->
+            <Button Name="LeftDirButton" Content="&lt;" Click="LeftDirButton_Click" Width="25" Height="25" Background="#00BFFF" BorderBrush="DarkGray" Foreground="Black" FontSize="15" Margin="0,0,5,0"/>
+
+            <!-- ТЕКУЩАЯ СТРАНИЦА КАК НА СКРИНЕ -->
+            <Border BorderBrush="LightGray" BorderThickness="1" Width="25" Height="25" Margin="0,0,5,0" Background="White">
+                <TextBlock Name="PageNumberTextBlock" Text="1" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="15"/>
+            </Border>
+
+            <!-- Кнопка ВПРАВО -->
+            <Button Name="RightDirButton" Content="&gt;" Click="RightDirButton_Click" Width="25" Height="25" Background="#00BFFF" BorderBrush="DarkGray" Foreground="Black" FontSize="15"/>
+
+        </StackPanel>
     </Grid>
+
 </Page>
