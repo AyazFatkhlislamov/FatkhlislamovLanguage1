@@ -1,12 +1,13 @@
 ﻿<Page x:Class="SavelyevLanguage.ClientPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:local="clr-namespace:SavelyevLanguage"
-      mc:Ignorable="d" 
+      mc:Ignorable="d"
       d:DesignHeight="550" d:DesignWidth="900"
-      Title="ClientPage" FontFamily="Comic Sans MS">
+      Title="ClientPage" FontFamily="Comic Sans MS"
+      IsVisibleChanged="Page_IsVisibleChanged">
 
     <Grid>
         <Grid.RowDefinitions>
@@ -15,22 +16,33 @@
             <RowDefinition Height="40"/>
         </Grid.RowDefinitions>
 
-        <!-- ПАНЕЛЬ ПОИСКА И ФИЛЬТРОВ -->
-        <StackPanel Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center" Margin="10,0">
-            <TextBlock Text="Поиск:" VerticalAlignment="Center" FontSize="15" Margin="0,0,5,0"/>
-            <TextBox Name="TBoxSearch" Width="200" Height="25" VerticalAlignment="Center" Margin="0,0,20,0" TextChanged="Filter_Changed"/>
+        <!-- ПАНЕЛЬ ПОИСКА, ФИЛЬТРОВ И КНОПКИ ДОБАВЛЕНИЯ -->
+        <Grid Grid.Row="0" Margin="10,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
 
-            <TextBlock Text="Пол:" VerticalAlignment="Center" FontSize="15" Margin="0,0,5,0"/>
-            <ComboBox Name="ComboGender" Width="100" Height="25" VerticalAlignment="Center" Margin="0,0,20,0" SelectionChanged="Filter_Changed"/>
+            <!-- Левая часть: Поиск и фильтры -->
+            <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                <TextBlock Text="Поиск:" VerticalAlignment="Center" FontSize="15" Margin="0,0,5,0"/>
+                <TextBox Name="TBoxSearch" Width="180" Height="25" VerticalAlignment="Center" Margin="0,0,20,0" TextChanged="Filter_Changed"/>
 
-            <TextBlock Text="Сортировка:" VerticalAlignment="Center" FontSize="15" Margin="0,0,5,0"/>
-            <ComboBox Name="ComboSort" Width="250" Height="25" VerticalAlignment="Center" SelectedIndex="0" SelectionChanged="Filter_Changed">
-                <TextBlock>Без сортировки</TextBlock>
-                <TextBlock>По фамилии (А-Я)</TextBlock>
-                <TextBlock>Последнее посещение (новые к старым)</TextBlock>
-                <TextBlock>Кол-во посещений (от большего к меньшему)</TextBlock>
-            </ComboBox>
-        </StackPanel>
+                <TextBlock Text="Пол:" VerticalAlignment="Center" FontSize="15" Margin="0,0,5,0"/>
+                <ComboBox Name="ComboGender" Width="80" Height="25" VerticalAlignment="Center" Margin="0,0,20,0" SelectionChanged="Filter_Changed"/>
+
+                <TextBlock Text="Сортировка:" VerticalAlignment="Center" FontSize="15" Margin="0,0,5,0"/>
+                <ComboBox Name="ComboSort" Width="230" Height="25" VerticalAlignment="Center" SelectedIndex="0" SelectionChanged="Filter_Changed">
+                    <TextBlock>Без сортировки</TextBlock>
+                    <TextBlock>По фамилии (А-Я)</TextBlock>
+                    <TextBlock>Последнее посещение (новые к старым)</TextBlock>
+                    <TextBlock>Кол-во посещений (от большего к меньшему)</TextBlock>
+                </ComboBox>
+            </StackPanel>
+
+            <!-- Правая часть: Кнопка добавления -->
+            <Button Name="BtnAdd" Content="добавить клиента" Grid.Column="1" Background="#04A0FF" Foreground="Black" BorderBrush="Black" Width="150" Height="30" VerticalAlignment="Center" Click="BtnAdd_Click"/>
+        </Grid>
 
         <!-- СПИСОК КЛИЕНТОВ -->
         <ListView Name="ClientListView" Grid.Row="1" HorizontalContentAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
@@ -64,7 +76,6 @@
                                 <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
                                     <TextBlock Text="{Binding Gender.Name, StringFormat=Пол: {0}}" FontSize="15"/>
                                     <TextBlock Text="  "/>
-                                    <!-- ИСПРАВИЛ ДАТУ -->
                                     <TextBlock Text="{Binding Birthday, StringFormat=Дата рождения: {0:dd.MM.yyyy}}" FontSize="15"/>
                                 </StackPanel>
 
@@ -74,17 +85,19 @@
                                     <TextBlock Text="{Binding Email, StringFormat=e-mail: {0}}" FontSize="15"/>
                                 </StackPanel>
 
-                                <!-- ИСПРАВИЛ ДАТУ -->
                                 <TextBlock Text="{Binding RegistrationDate, StringFormat=Дата регистрации: {0:dd.MM.yyyy}}" FontSize="15" Margin="0,20,0,0"/>
 
                                 <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
-                                    <!-- ИСПРАВИЛ ДАТУ -->
                                     <TextBlock Text="{Binding LastVisitDate, StringFormat=Дата последнего посещения: {0:dd.MM.yyyy}, TargetNullValue='Дата последнего посещения: нет'}" FontSize="15"/>
                                     <TextBlock Text="{Binding VisitCount, StringFormat=' Кол-во посещений: {0}'}" FontSize="15"/>
                                 </StackPanel>
                             </StackPanel>
 
-                            <Button Grid.Column="2" Content="удалить" Background="#00BFFF" Foreground="Black" BorderBrush="Black" Width="150" Height="30" VerticalAlignment="Center" Click="BtnDelete_Click"/>
+                            <!-- КНОПКИ РЕДАКТИРОВАНИЯ И УДАЛЕНИЯ (как на скрине) -->
+                            <StackPanel Grid.Column="2" VerticalAlignment="Center">
+                                <Button Content="удалить" Background="#04A0FF" Foreground="Black" BorderBrush="Black" Width="150" Height="30" Margin="0,0,0,10" Click="BtnDelete_Click"/>
+                                <Button Content="редактировать" Background="#04A0FF" Foreground="Black" BorderBrush="Black" Width="150" Height="30" Click="BtnEdit_Click"/>
+                            </StackPanel>
                         </Grid>
                     </Border>
                 </DataTemplate>
@@ -103,10 +116,9 @@
                 <TextBlock>Все</TextBlock>
             </ComboBox>
 
-            <Button Name="LeftDirButton" Content="&lt;" Click="LeftDirButton_Click" Width="25" Height="25" Background="#00BFFF" BorderBrush="DarkGray" Foreground="White" FontSize="15" Margin="0,0,5,0"/>
+            <Button Name="LeftDirButton" Content="&lt;" Click="LeftDirButton_Click" Width="25" Height="25" Background="#04A0FF" BorderBrush="Black" Foreground="Black" FontSize="15" Margin="0,0,5,0"/>
             <StackPanel Name="PageNumbersStackPanel" Orientation="Horizontal" VerticalAlignment="Center"/>
-            <Button Name="RightDirButton" Content="&gt;" Click="RightDirButton_Click" Width="25" Height="25" Background="#00BFFF" BorderBrush="DarkGray" Foreground="White" FontSize="15" Margin="5,0,0,0"/>
+            <Button Name="RightDirButton" Content="&gt;" Click="RightDirButton_Click" Width="25" Height="25" Background="#04A0FF" BorderBrush="Black" Foreground="Black" FontSize="15" Margin="5,0,0,0"/>
         </StackPanel>
     </Grid>
 </Page>
-

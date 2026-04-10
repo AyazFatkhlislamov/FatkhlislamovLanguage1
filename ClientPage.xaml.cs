@@ -25,6 +25,32 @@ namespace SavelyevLanguage
 
             UpdateClients();
         }
+        private void BtnAdd_Click(object sender, RoutedEventArgs e)
+        {
+            Manager.MainFrame.Navigate(new AddEditPage(null)); // Передаем null для добавления
+        }
+
+        private void BtnEdit_Click(object sender, RoutedEventArgs e)
+        {
+            var button = sender as Button;
+            if (button == null) return;
+
+            var client = button.DataContext as Client;
+            if (client == null) return;
+
+            Manager.MainFrame.Navigate(new AddEditPage(client)); // Передаем клиента для редактирования
+        }
+
+        private void Page_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            // Обновление данных при возврате на страницу
+            if (Visibility == Visibility.Visible)
+            {
+                FatkhlislamovLanguageEntities.GetContext().ChangeTracker.Entries().ToList().ForEach(p => p.Reload());
+                UpdateClients();
+            }
+        }
+
 
         private void UpdateClients()
         {
